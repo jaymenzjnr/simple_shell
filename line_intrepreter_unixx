@@ -1,0 +1,80 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+#define BUFFER_SIZE 1024
+
+/**
+ * main - Entry point of the shell
+ *
+ * This function implements a basic UNIX command line interpreter (shell).
+ * It repeatedly displays a prompt, reads user input, executes commands, and
+ * displays the prompt again until the user exits the shell using Ctrl+D.
+ *
+ * Return: Always 0
+ */
+int main(void)
+{
+    char *command;
+    size_t bufsize = BUFFER_SIZE;
+
+    while (1)
+    {
+        // Display prompt
+        printf("$ ");
+
+        // Read user input
+        command = (char *)malloc(bufsize * sizeof(char));
+        if (command == NULL)
+        {
+            perror("malloc");
+            exit(EXIT_FAILURE);
+        }
+
+        if (getline(&command, &bufsize, stdin) == -1)
+        {
+            if (feof(stdin))
+            {
+                printf("\n"); // Ctrl+D pressed, print newline and exit
+                exit(EXIT_SUCCESS);
+            }
+            else
+            {
+                perror("getline");
+                exit(EXIT_FAILURE);
+            }
+        }
+
+        // Remove newline character from input
+        size_t length = strlen(command);
+        if (length > 0 && command[length - 1] == '\n')
+            command[length - 1] = '\0';
+
+        // Fork a child process
+        pid_t pid = fork();
+        if (pid == -1)
+        {
+            perror("fork");
+            exit(EXIT_FAILURE);
+        }
+        else if (pid == 0)
+        {
+            // Child process
+            if (execvp(command, (char *const *)&command) == -1)
+            {
+                perror("execvp");
+                exit(EXIT_FAILURE);
+            }
+        }
+        else
+        {
+            // Parent process
+            wait(NULL);
+        }
+
+        free(command);
+    }
+
+    return 0;
+}

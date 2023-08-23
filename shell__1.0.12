@@ -1,0 +1,109 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <limits.h>
+
+#define BUFFER_SIZE 1024
+
+/**
+ * custom_getline - Custom getline function to read input using a buffer
+ *
+ * Return: Pointer to the read line, or NULL on failure or end of file
+ */
+char *custom_getline(void) {
+    /* ... (rest of the custom_getline function code) ... */
+}
+
+/**
+ * my_setenv - Set or modify environment variable
+ * @args: Array of command arguments (including variable and value)
+ *
+ * Return: 0 on success, -1 on failure
+ */
+int my_setenv(char **args) {
+    /* ... (rest of my_setenv function code) ... */
+}
+
+/**
+ * my_unsetenv - Unset an environment variable
+ * @args: Array of command arguments (including variable)
+ *
+ * Return: 0 on success, -1 on failure
+ */
+int my_unsetenv(char **args) {
+    /* ... (rest of my_unsetenv function code) ... */
+}
+
+/**
+ * my_cd - Change the current directory
+ * @args: Array of command arguments (including directory)
+ *
+ * Return: 0 on success, -1 on failure
+ */
+int my_cd(char **args) {
+    /* ... (rest of my_cd function code) ... */
+}
+
+/**
+ * execute_command - Execute a single command
+ * @args: Array of command arguments
+ *
+ * Return: 0 on success, -1 on failure
+ */
+int execute_command(char **args) {
+    /* ... (rest of execute_command function code) ... */
+}
+
+/**
+ * main - Entry point of the simple shell program
+ *
+ * Return: Always 0
+ */
+int main(void) {
+    while (1) {
+        printf("Shell> ");
+        fflush(stdout);
+
+        char *input = custom_getline();
+
+        if (input == NULL) {
+            printf("Goodbye!\n");
+            break;
+        }
+
+        // Tokenize input by semicolon
+        char *command = strtok(input, ";");
+        while (command != NULL) {
+            int status = 0;
+            int should_execute_next = 1;
+
+            // Tokenize the command arguments
+            char *args[3];
+            args[0] = strtok(command, " \t\n");
+            args[1] = strtok(NULL, " \t\n");
+            args[2] = strtok(NULL, " \t\n");
+
+            while (args[0] != NULL && should_execute_next) {
+                int and_operator = (args[1] != NULL && strcmp(args[1], "&&") == 0);
+                int or_operator = (args[1] != NULL && strcmp(args[1], "||") == 0);
+
+                status = execute_command(args);
+
+                if ((and_operator && status != 0) || (or_operator && status == 0)) {
+                    should_execute_next = 0;
+                }
+
+                args[0] = strtok(NULL, " \t\n");
+                args[1] = strtok(NULL, " \t\n");
+                args[2] = strtok(NULL, " \t\n");
+            }
+
+            command = strtok(NULL, ";");
+        }
+
+        free(input);
+    }
+
+    return 0;
+}
