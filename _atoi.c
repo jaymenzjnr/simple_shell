@@ -1,10 +1,10 @@
 #include "shell.h"
 
 /**
- * interactive code will return true if shell in interactive mode
+ * interactive - returns true if shell is interactive mode
  * @info: struct address
  *
- * sehll will return: 1 if interactive mode, 0 otherwise
+ * Return: 1 if interactive mode, 0 otherwise
  */
 int interactive(info_t *info)
 {
@@ -12,26 +12,26 @@ int interactive(info_t *info)
 }
 
 /**
- * variable my_day - checks if character is a delimeter
+ * is_delim - checks if character is a delimeter
  * @c: the char to check
- * @day: the delimeter string
+ * @delim: the delimeter string
  * Return: 1 if true, 0 if false
  */
-int my_day(char c, char *day)
+int is_delim(char c, char *delim)
 {
-	while (*day)
-		if (*day++ == c)
+	while (*delim)
+		if (*delim++ == c)
 			return (1);
 	return (0);
 }
 
 /**
- * _abcde - checks for alphabets
+ * _isalpha - checks for alphabetic character
  * @c: The character to input
  * Return: 1 if c is alphabetic, 0 otherwise
  */
 
-int _abcde(int c)
+int _isalpha(int c)
 {
 	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
 		return (1);
@@ -40,12 +40,12 @@ int _abcde(int c)
 }
 
 /**
- * sting_int - convert string to integers
+ * _atoi - converts a string to an integer
  * @s: the string to be converted
- * Return: 0 if no numbers in string, convert number otherws
+ * Return: 0 if no numbers in string, converted number otherwise
  */
 
-int string_int(char *s)
+int _atoi(char *s)
 {
 	int i, sign = 1, flag = 0, output;
 	unsigned int result = 0;
